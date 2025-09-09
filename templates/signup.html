@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up | LM Arena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .signup-form {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 5px;
+        }
+        .signup-form h2 {
+            margin-top: 0;
+        }
+        .signup-form label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .signup-form input[type="text"],
+        .signup-form input[type="password"] {
+            width: 95%;
+            padding: 8px;
+            margin-bottom: 15px;
+            background-color: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+        }
+        /* Make both the <button> and <a.button> share the same green styling */
+        .signup-form button,
+        .signup-form a.button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none; /* ensures <a> looks like a button */
+            margin: 0; /* set margin to 0 so we control spacing in container */
+        }
+        .signup-form button:hover,
+        .signup-form a.button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+
+        /* Container to place buttons side by side */
+        .button-container {
+            display: flex;
+            gap: 10px;        /* space between buttons */
+            margin-top: 10px; /* a little spacing from the inputs */
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-form">
+        <h2>Sign Up</h2>
+
+        <!-- If there's an error (like "Username already exists"), show it -->
+        {% if error %}
+          <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <label for="name">Full Name:</label>
+            <input type="text" name="name" id="name" required>
+
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+
+            <!-- Place both buttons in a common container so they're side by side -->
+            <div class="button-container">
+                <button type="submit">Sign Up</button>
+
+                <!-- Only show "Back to Login" if there's an error -->
+                {% if error %}
+                  <a class="button" href="/login">Back to Login</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</body>
+</html>

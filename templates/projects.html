@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projects | LM Arena</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #121212;
+          color: #e0e0e0;
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        a.button, button {
+          background-color: #4CAF50;
+          color: #fff;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 4px;
+          text-decoration: none;
+          cursor: pointer;
+          margin: 5px 0;
+        }
+        a.button:hover, button:hover {
+          background-color: #45a049;
+        }
+        .button.remove-button {
+          background-color: #e74c3c;
+          margin-left: 10px;
+        }
+        .button.remove-button:hover {
+          background-color: #c0392b;
+        }
+        .admin-section {
+          background-color: #1e1e1e;
+          border: 1px solid #333;
+          padding: 15px;
+          margin-top: 30px;
+          border-radius: 5px;
+        }
+        .schema-info {
+          margin-bottom: 10px;
+          background-color: #2a2a2a;
+          padding: 10px;
+          border-radius: 4px;
+        }
+        .schema-info ul {
+          margin: 10px 0 0 20px;
+        }
+        .project-list {
+          margin-top: 20px;
+          background-color: #1e1e1e;
+          padding: 10px;
+          border-radius: 4px;
+        }
+        .project-item.user-project-spacing {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+          padding: 5px;
+        }
+        .active-project {
+          border: 2px solid #4CAF50;
+          border-radius: 4px;
+          padding: 5px;
+          margin-bottom: 10px;
+        }
+        .logout-container {
+          margin-top: 40px;
+          text-align: right;
+        }
+
+        /* NEW: space out admin action buttons horizontally */
+        .admin-action-buttons {
+          display: flex;
+          gap: 10px;        /* space between buttons */
+          margin-top: 10px; /* extra spacing above the row of buttons */
+        }
+    </style>
+</head>
+<body>
+    <h1>Projects</h1>
+    {% if project_available %}
+        {% if session['role'] == 'user' %}
+            <div class="project-list">
+                {% for p in all_projects %}
+                <div class="project-item user-project-spacing">
+                    <strong>{{ p }}</strong>
+                    <a href="/select_project/{{ p }}" class="button">Start Voting</a>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>These are the currently active projects:</p>
+            <div class="project-list">
+                {% if all_projects %}
+                    {% for p in all_projects %}
+                    <div class="project-item active-project" style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>{{ p }}</span>
+                        <form action="/remove_project/{{ p }}" method="post" style="margin: 0;">
+                            <button type="submit" class="button remove-button" onclick="return confirm('Are you sure you want to remove project: {{ p }}?');">Remove</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No projects yet</p>
+                {% endif %}
+            </div>
+            <p>Admins cannot vote. You can upload another CSV or view results below.</p>
+        {% endif %}
+    {% else %}
+        <p>No active projects at the moment.</p>
+    {% endif %}
+    {% if session['role'] == 'admin' %}
+    <div class="admin-section">
+        <h2>Admin Actions</h2>
+        <div class="schema-info">
+            <h3>Expected CSV Schema</h3>
+            <p>The CSV file should have the following structure:</p>
+            <ul>
+                <li>Row 1: <strong>question, model_1, model_2, ...</strong></li>
+                <li>Row 2: <strong>example_prompt, model_1_response, model_2_response, ...</strong></li>
+            </ul>
+        </div>
+        <p>Upload a new project CSV file (this will reset the current session):</p>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".csv" required>
+            <button type="submit">Upload CSV</button>
+        </form>
+        <p>View results or reset (only if a project is loaded):</p>
+        <div class="admin-action-buttons">
+            <a href="/reset_all" class="button"
+               onclick="return confirm('Are you sure you want to remove ALL projects and data? This cannot be undone.');">
+               Reset &amp; Start Over
+            </a>
+            <a href="/results" class="button">View All Results</a>
+            <a href="/admin/users" class="button">Manage Users</a>
+        </div>
+    </div>
+    {% endif %}
+    <div class="logout-container">
+        <a href="/logout" class="button">Logout</a>
+    </div>
+</body>
+</html>

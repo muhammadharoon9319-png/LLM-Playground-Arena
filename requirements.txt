@@ -1,0 +1,10 @@
+Flask
+pandas
+Werkzeug
+python-dateutil
+Jinja2
+MarkupSafe
+itsdangerous
+pytz
+numpy
+flask_sqlalchemy

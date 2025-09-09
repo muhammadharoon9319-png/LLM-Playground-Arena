@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Projects Results | LM Arena</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #121212;
+          color: #e0e0e0;
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        h1, h2, h3 {
+          text-align: center;
+          color: #ffffff;
+        }
+        .project {
+          margin-bottom: 40px;
+          border: 1px solid #333;
+          border-radius: 5px;
+          padding: 15px;
+          background-color: #1e1e1e;
+        }
+        .project h2 {
+          margin-top: 0;
+        }
+        .user-result {
+          margin-bottom: 20px;
+          padding: 10px;
+          background-color: #2a2a2a;
+          border-radius: 4px;
+        }
+        .user-result h3 {
+          margin-top: 0;
+        }
+        .button {
+          background-color: #4CAF50;
+          color: white;
+          padding: 8px 12px;
+          border: none;
+          border-radius: 4px;
+          text-decoration: none;
+          cursor: pointer;
+          margin: 10px 5px;
+          display: inline-block;
+        }
+        .button:hover {
+          background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aggregated Results for All Projects</h1>
+    {% for project in all_projects_results %}
+      <div class="project">
+         <h2>Project: {{ project.project_name }}</h2>
+         {% if project.user_results %}
+           {% for user in project.user_results %}
+           <div class="user-result">
+               <h3>User: {{ user.username }}</h3>
+               <p><strong>Session ID:</strong> {{ user.session_id }} 
+                  | <strong>Total Comparisons:</strong> {{ user.comparisons_made }}</p>
+               <p><strong>Overall Model Rankings:</strong></p>
+               {% for model, percentage in user.sorted_models %}
+                  <div>{{ loop.index }}. {{ model }} : {{ "%.1f"|format(percentage) }}%</div>
+               {% endfor %}
+               <p><strong>Pairwise Results:</strong></p>
+               {% for pair, stats in user.pairwise_results.items() %}
+                  <div>
+                      <strong>{{ pair }}</strong> - Total: {{ stats.total }} comparisons<br>
+                      {% for key, value in stats.items() %}
+                          {% if key != 'total' %}
+                              {{ key }}: {{ value }} wins<br>
+                          {% endif %}
+                      {% endfor %}
+                  </div>
+               {% endfor %}
+               <!-- Delete Score Button -->
+	       <form action="/admin/delete_score/{{ user.project_user_id }}" method="post" style="margin-top:10px;">
+	          <button type="submit" class="button remove-button" onclick="return confirm('Are you sure you want to delete scores for user {{ user.username }}?');">Delete Score</button>
+	       </form>                 
+           </div>
+           {% endfor %}
+           <!-- Download CSV button for this specific project -->
+	   <div style="text-align: center; margin-top: 10px;">
+	     <a href="/download_csv/{{ project.project_id }}" class="button">Download Scores CSV</a>
+	     <a href="/download_detailed_csv/{{ project.project_id }}" class="button">
+	       Download Detailed Results CSV
+	     </a>
+  	   </div>
+
+         {% else %}
+            <p>No user results for this project yet.</p>
+         {% endif %}
+      </div>
+    {% endfor %}
+    <div style="text-align: center;">
+      <a href="/projects" class="button">Back to Projects</a>
+      <a href="/logout" class="button">Logout</a>
+    </div>
+</body>
+</html>

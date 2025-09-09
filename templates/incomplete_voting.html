@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Incomplete Voting</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #121212;
+          color: #e0e0e0;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+          text-align: center;
+        }
+        .button {
+          background-color: #4CAF50;
+          color: #fff;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 4px;
+          text-decoration: none;
+          cursor: pointer;
+          margin: 10px;
+        }
+        .button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Voting Incomplete</h1>
+    <p>You have not completed voting on all responses for project <strong>{{ project_name }}</strong>.</p>
+    <p>Please continue voting until all questions have been answered.</p>
+    <a class="button" href="/arena">Continue Voting</a>
+    <a class="button" href="/logout">Logout</a>
+</body>
+</html>
