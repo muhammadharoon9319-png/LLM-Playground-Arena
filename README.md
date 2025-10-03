@@ -91,7 +91,7 @@ Sign up for a new account or use the default credentials for immediate testing:
 
 LLM-Playground-Arena/  
 │── app.py               \# Main Flask application logic  
-│── templates/           \# HTML templates for the web interface (UI)  
+│── blueprints/           \# HTML blueprints for the web interface (UI)  
 │── requirements.txt     \# List of Python dependencies  
 │── Dockerfile           \# Docker image build configuration  
 │── docker-compose.yml   \# Docker Compose configuration for running services  
